@@ -17,7 +17,5 @@ class JudgeResult(
     @Enumerated(EnumType.STRING)
     val statusCode: JudgeStatusCode
 ) {
-    fun isError(): Boolean {
-        return statusCode.isError()
-    }
+    fun isError(): Boolean = statusCode.isError()
 }

@@ -21,9 +21,7 @@ data class JudgeHistoryResponse(
     )
 
     companion object {
-        fun toCommitUrl(pullRequestUrl: String, commitHash: String): String {
-            return "$pullRequestUrl/commits/$commitHash"
-        }
+        fun toCommitUrl(pullRequestUrl: String, commitHash: String): String = "$pullRequestUrl/commits/$commitHash"
     }
 }
 

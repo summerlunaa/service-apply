@@ -31,7 +31,5 @@ class JudgeHistory(
 
     id: Long = 0L
 ) : BaseEntity(id) {
-    fun isJudgeable(commit: Commit): Boolean {
-        return this.commitHash != commit.hash || result?.isError() ?: true
-    }
+    fun isJudgeable(commit: Commit): Boolean = this.commitHash != commit.hash || result?.isError() ?: true
 }
