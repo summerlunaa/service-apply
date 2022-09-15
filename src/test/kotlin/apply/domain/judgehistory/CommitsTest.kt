@@ -1,4 +1,4 @@
-package apply.domain.testexecutionhistory
+package apply.domain.judgehistory
 
 import apply.createCommit
 import io.kotest.core.spec.style.StringSpec
@@ -18,7 +18,7 @@ class CommitsTest : StringSpec({
             LocalDateTime.now().plusMinutes(10)
         )
 
-        latestCommit.commitId shouldBe "hello-2"
+        latestCommit.commitHash shouldBe "hello-2"
     }
 
     "종료 시간 이전의 가장 최신 commit을 가져온다" {
@@ -34,6 +34,6 @@ class CommitsTest : StringSpec({
             LocalDateTime.now().plusMinutes(10)
         )
 
-        latestCommit.commitId shouldBe "hello-2"
+        latestCommit.commitHash shouldBe "hello-2"
     }
 })
