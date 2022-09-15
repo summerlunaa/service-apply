@@ -8,7 +8,7 @@ import javax.persistence.Enumerated
 @Embeddable
 class JudgeResult(
     @Column
-    val successCount: Int,
+    val passCount: Int,
 
     @Column
     val totalCount: Int,
@@ -16,4 +16,8 @@ class JudgeResult(
     @Column
     @Enumerated(EnumType.STRING)
     val statusCode: JudgeStatusCode
-)
+) {
+    fun isError(): Boolean {
+        return statusCode.isError()
+    }
+}

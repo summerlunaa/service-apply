@@ -1,5 +1,5 @@
 package apply.domain.judgehistory
 
-enum class JudgeTestType {
+enum class JudgeType {
     EXAMPLE, REAL
 }

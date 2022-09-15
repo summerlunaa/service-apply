@@ -23,7 +23,7 @@ class JudgeHistory(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val testType: JudgeTestType,
+    val judgeType: JudgeType,
 
     @Column
     @Embedded
@@ -31,7 +31,7 @@ class JudgeHistory(
 
     id: Long = 0L
 ) : BaseEntity(id) {
-    fun isCommitIdEqual(commit: Commit): Boolean {
-        return this.commitHash == commit.commitHash
+    fun isJudgeable(commit: Commit): Boolean {
+        return this.commitHash != commit.commitHash || result?.isError() ?: true
     }
 }
