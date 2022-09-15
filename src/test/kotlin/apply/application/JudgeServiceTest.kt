@@ -1,10 +1,9 @@
 package apply.application
 
-import apply.LAST_COMMIT_HASH
+import apply.COMMIT_HASH
 import apply.application.github.GithubApi
 import apply.createAssignment
-import apply.createCommit
-import apply.createCommits
+import apply.createCommitResponse
 import apply.createJudgeHistory
 import apply.createMission
 import apply.domain.assignment.AssignmentRepository
@@ -36,7 +35,7 @@ class JudgeServiceTest : BehaviorSpec({
             startDateTime = LocalDateTime.now().minusMinutes(2),
             endDateTime = LocalDateTime.now().minusMinutes(1)
         )
-        every { githubApi.requestCommits(any()) } returns createCommits()
+        every { githubApi.requestCommits(any()) } returns listOf(createCommitResponse())
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns null
 
@@ -49,10 +48,8 @@ class JudgeServiceTest : BehaviorSpec({
 
     Given("과제 제출 마감 시간 이전의 가장 최신 커밋이 존재하지 않을 때") {
         every { missionRepository.getById(any()) } returns createMission()
-        every { githubApi.requestCommits(any()) } returns createCommits(
-            listOf(
-                createCommit(date = LocalDateTime.now().plusDays(8))
-            )
+        every { githubApi.requestCommits(any()) } returns listOf(
+            createCommitResponse(date = LocalDateTime.now().plusDays(8))
         )
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns null
@@ -67,11 +64,11 @@ class JudgeServiceTest : BehaviorSpec({
     Given("테스트 실행 이력이 존재할 때") {
         val assignment = createAssignment()
         every { missionRepository.getById(any()) } returns createMission()
-        every { githubApi.requestCommits(any()) } returns createCommits()
+        every { githubApi.requestCommits(any()) } returns listOf(createCommitResponse())
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
 
         When("제출한 commit id와 최신 이력의 commit id가 같은 예제 테스트 케이스를 실행하면") {
-            val existHistory = createJudgeHistory(commitHash = LAST_COMMIT_HASH)
+            val existHistory = createJudgeHistory(commitHash = COMMIT_HASH)
             every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns existHistory
             Then("기존의 최신 테스트 실행 결과를 반환한다.") {
                 val executionResponse = judgeService.runExampleTestCase(1L, 1L)

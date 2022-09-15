@@ -1,23 +1,13 @@
 package apply.domain.judgehistory
 
-import com.fasterxml.jackson.annotation.JsonAlias
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class Commit(
-    @JsonAlias("sha")
-    val commitHash: String,
-    private val commit: InnerCommit,
+    val hash: String,
+    val date: LocalDateTime
 ) {
-    val date: LocalDateTime
-        get() = commit.committer.date
-
-    constructor(commitHash: String, date: LocalDateTime) : this(commitHash, InnerCommit(Committer(date)))
+    constructor(hash: String, date: String) : this(
+        hash, LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+    )
 }
-
-class InnerCommit(
-    val committer: Committer
-)
-
-class Committer(
-    val date: LocalDateTime
-)

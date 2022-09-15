@@ -5,6 +5,7 @@ import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getByUserIdAndMissionId
 import apply.domain.judgehistory.Commit
+import apply.domain.judgehistory.Commits
 import apply.domain.judgehistory.JudgeHistory
 import apply.domain.judgehistory.JudgeHistoryRepository
 import apply.domain.judgehistory.JudgeType
@@ -35,14 +36,17 @@ class JudgeService(
         val latestCommit = findLatestCommitFromGithub(mission, assignment)
         val lastHistory = judgeHistoryRepository.findLastByUserIdAndMissionId(userId, missionId)
 
+        // TODO : implement api request to judge system
         return (
             lastHistory?.takeUnless { it.isJudgeable(latestCommit) }
-                ?: JudgeHistory(userId, missionId, TEMPORARY_REQUEST_KEY, latestCommit.commitHash, JudgeType.EXAMPLE)
+                ?: JudgeHistory(userId, missionId, TEMPORARY_REQUEST_KEY, latestCommit.hash, JudgeType.EXAMPLE)
             ).let { JudgeHistoryResponse(it, assignment) }
     }
 
     private fun findLatestCommitFromGithub(mission: Mission, assignment: Assignment): Commit {
         return githubApi.requestCommits(assignment)
+            .map { Commit(it.hash, it.date) }
+            .let(::Commits)
             .findLatestUntilEndDateTime(mission.period.endDateTime)
     }
 }

@@ -2,8 +2,8 @@ package apply
 
 import apply.application.JudgeHistoryResponse
 import apply.application.TestStatus
+import apply.application.github.CommitResponse
 import apply.domain.judgehistory.Commit
-import apply.domain.judgehistory.Commits
 import apply.domain.judgehistory.JudgeHistory
 import apply.domain.judgehistory.JudgeResult
 import apply.domain.judgehistory.JudgeStatusCode
@@ -11,7 +11,6 @@ import apply.domain.judgehistory.JudgeType
 import java.time.LocalDateTime
 
 const val COMMIT_HASH = "commit-hash"
-const val LAST_COMMIT_HASH = "last-commit-hash"
 const val COMMIT_URL =
     "https://github.com/woowacourse/service-apply/pull/367/commits/eeb43de3f53f4bec08e7d63f07badb66c12dfa31"
 
@@ -35,22 +34,6 @@ fun createJudgeHistoryResult(
     return JudgeResult(correctCount, totalCount, statusCode)
 }
 
-fun createCommit(
-    commitHash: String = COMMIT_HASH,
-    date: LocalDateTime = LocalDateTime.now()
-): Commit {
-    return Commit(commitHash, date)
-}
-
-fun createCommits(
-    commits: List<Commit> = listOf(
-        createCommit(),
-        createCommit(LAST_COMMIT_HASH, LocalDateTime.now().plusDays(1))
-    )
-): Commits {
-    return Commits(commits)
-}
-
 fun createJudgeHistoryResponse(
     testStatus: TestStatus = TestStatus.PENDING,
     pullRequestUrl: String = PULL_REQUEST_URL,
@@ -60,4 +43,18 @@ fun createJudgeHistoryResponse(
     message: String? = null
 ): JudgeHistoryResponse {
     return JudgeHistoryResponse(testStatus, pullRequestUrl, commitUrl, passCount, totalCount, message)
+}
+
+fun createCommit(
+    commitHash: String = COMMIT_HASH,
+    date: LocalDateTime = LocalDateTime.now()
+): Commit {
+    return Commit(commitHash, date)
+}
+
+fun createCommitResponse(
+    hash: String = COMMIT_HASH,
+    date: LocalDateTime = LocalDateTime.now()
+): CommitResponse {
+    return CommitResponse(hash, date.toString())
 }

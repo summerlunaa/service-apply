@@ -1,16 +1,16 @@
 package apply.application.github
 
 import apply.domain.assignment.Assignment
-import apply.domain.judgehistory.Commit
-import apply.domain.judgehistory.Commits
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToFlux
 
 private fun Regex.findOrThrow(pullRequestUrl: String): MatchNamedGroupCollectionWrapper {
-    return MatchNamedGroupCollectionWrapper(find(pullRequestUrl)
-        ?: throw IllegalArgumentException("pull Request URL 의 형식이 올바르지 않습니다. URL: $pullRequestUrl"))
+    return MatchNamedGroupCollectionWrapper(
+        find(pullRequestUrl)
+            ?: throw IllegalArgumentException("pull Request URL 의 형식이 올바르지 않습니다. URL: $pullRequestUrl")
+    )
 }
 
 private class MatchNamedGroupCollectionWrapper(matchResult: MatchResult) {
@@ -34,19 +34,17 @@ class ListGithubApi : GithubApi {
         .baseUrl(BASE_API_URL)
         .build()
 
-    override fun requestCommits(assignment: Assignment): Commits {
+    override fun requestCommits(assignment: Assignment): List<CommitResponse> {
         val groups = PULL_REQUEST_URL_PATTERN.findOrThrow(assignment.pullRequestUrl)
 
-        val commits = client.get()
+        return client.get()
             .uri("${groups["organization"]}/${groups["repository"]}/pulls/${groups["pullRequestNumber"]}/commits?per_page=$PAGE_SIZE")
             .retrieve()
             .onStatus(HttpStatus::is4xxClientError) { throw IllegalArgumentException("깃허브 API 요청에 실패했습니다.") }
             .onStatus(HttpStatus::is5xxServerError) { throw GithubApiException("깃허브 API 요청에 실패했습니다.") }
-            .bodyToFlux<Commit>()
+            .bodyToFlux<CommitResponse>()
             .toIterable()
             .toList()
-
-        return Commits(commits)
     }
 
     companion object {
