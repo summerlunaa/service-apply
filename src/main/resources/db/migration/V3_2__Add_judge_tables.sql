@@ -11,15 +11,15 @@ create table judge_item
 
 create table judge_history
 (
-    id            bigint       not null auto_increment,
-    user_id       bigint       not null,
-    mission_id    bigint       not null,
-    request_key   char(36)     not null unique,
-    commit_hash   char(40)     not null,
-    test_type     varchar(255) not null,
-    status_code   int,
-    success_count int,
-    total_count   int,
+    id          bigint       not null auto_increment,
+    user_id     bigint       not null,
+    mission_id  bigint       not null,
+    request_key char(36)     not null unique,
+    commit_hash char(40)     not null,
+    judge_type  varchar(255) not null,
+    status_code varchar(255),
+    pass_count  int,
+    total_count int,
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
@@ -28,7 +28,7 @@ create table judge_fail_cause
 (
     id          bigint   not null auto_increment,
     request_key char(36) not null unique,
-    message     clob,
+    message     longtext,
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;

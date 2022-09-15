@@ -19,11 +19,11 @@ fun createJudgeHistory(
     missionId: Long = 1L,
     requestKey: String = "default-request-key",
     commitHash: String = COMMIT_HASH,
-    testType: JudgeType = JudgeType.EXAMPLE,
+    judgeType: JudgeType = JudgeType.EXAMPLE,
     result: JudgeResult = createJudgeHistoryResult(),
     id: Long = 0L
 ): JudgeHistory {
-    return JudgeHistory(userId, missionId, requestKey, commitHash, testType, result, id)
+    return JudgeHistory(userId, missionId, requestKey, commitHash, judgeType, result, id)
 }
 
 fun createJudgeHistoryResult(
