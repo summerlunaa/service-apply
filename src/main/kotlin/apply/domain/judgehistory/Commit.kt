@@ -3,11 +3,13 @@ package apply.domain.judgehistory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+private fun String.parseBy(formatter: DateTimeFormatter) = LocalDateTime.parse(this, formatter)
+
 class Commit(
     val hash: String,
-    val date: LocalDateTime
+    val dateTime: LocalDateTime
 ) {
     constructor(hash: String, date: String) : this(
-        hash, LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+        hash, date.parseBy(DateTimeFormatter.ISO_DATE_TIME)
     )
 }

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 
 private class CommitDeserializer : JsonDeserializer<CommitResponse>() {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): CommitResponse {
-        val jsonNode: JsonNode = p.codec.readTree(p)
+    override fun deserialize(parser: JsonParser, context: DeserializationContext): CommitResponse {
+        val jsonNode: JsonNode = parser.codec.readTree(parser)
         return CommitResponse(
             jsonNode["sha"].asText(),
             jsonNode["commit"]["committer"]["date"].asText()
