@@ -13,6 +13,12 @@ private fun Regex.findOrThrow(pullRequestUrl: String): MatchNamedGroupCollection
     )
 }
 
+private fun WebClient.ResponseSpec.handleOnError(pullRequestUrl: String): WebClient.ResponseSpec {
+    val message = "깃허브 API 요청에 실패했습니다. pullRequestUrl : $pullRequestUrl, statusCode = %s"
+    return onStatus(HttpStatus::is4xxClientError) { throw IllegalArgumentException(message.format(it.statusCode())) }
+        .onStatus(HttpStatus::is5xxServerError) { throw GithubApiException(message.format(it.statusCode())) }
+}
+
 private class MatchNamedGroupCollectionWrapper(matchResult: MatchResult) {
     private val matchNamedGroupCollection: MatchNamedGroupCollection
 
@@ -38,8 +44,7 @@ class ListGithubApi : GithubApi {
         return client.get()
             .uri("${groups["organization"]}/${groups["repository"]}/pulls/${groups["pullRequestNumber"]}/commits?per_page=$PAGE_SIZE")
             .retrieve()
-            .onStatus(HttpStatus::is4xxClientError) { throw IllegalArgumentException("깃허브 API 요청에 실패했습니다.") }
-            .onStatus(HttpStatus::is5xxServerError) { throw GithubApiException("깃허브 API 요청에 실패했습니다.") }
+            .handleOnError(assignment.pullRequestUrl)
             .bodyToFlux<CommitResponse>()
             .toIterable()
             .toList()
