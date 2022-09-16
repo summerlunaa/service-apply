@@ -12,9 +12,9 @@ class JudgeHistoryTest : StringSpec({
         val judgeHistory = createJudgeHistory()
         val commit = createCommit("different-commit-hash")
 
-        val isEqual = judgeHistory.isJudgeable(commit)
+        val isCompleted = judgeHistory.isCompleted(commit)
 
-        isEqual.shouldBeTrue()
+        isCompleted.shouldBeFalse()
     }
 
     "이전 자동채점 결과가 에러였다면 커밋 해쉬가 같아도 자동 채점이 가능하다" {
@@ -25,17 +25,17 @@ class JudgeHistoryTest : StringSpec({
         )
         val commit = createCommit()
 
-        val isEqual = judgeHistory.isJudgeable(commit)
+        val isEqual = judgeHistory.isCompleted(commit)
 
-        isEqual.shouldBeTrue()
+        isEqual.shouldBeFalse()
     }
 
     "커밋 해쉬가 같고, 이전 자동 채점 결과가 정상이었다면 자동 채점이 불가능하다" {
         val judgeHistory = createJudgeHistory()
         val commit = createCommit()
 
-        val isEqual = judgeHistory.isJudgeable(commit)
+        val isEqual = judgeHistory.isCompleted(commit)
 
-        isEqual.shouldBeFalse()
+        isEqual.shouldBeTrue()
     }
 })
