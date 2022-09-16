@@ -14,7 +14,6 @@ private fun Regex.findOrThrow(pullRequestUrl: String): MatchNamedGroupCollection
 }
 
 private class MatchNamedGroupCollectionWrapper(matchResult: MatchResult) {
-
     private val matchNamedGroupCollection: MatchNamedGroupCollection
 
     init {
@@ -29,7 +28,6 @@ private class MatchNamedGroupCollectionWrapper(matchResult: MatchResult) {
 
 @Component
 class ListGithubApi : GithubApi {
-
     private val client = WebClient.builder()
         .baseUrl(BASE_API_URL)
         .build()
@@ -48,10 +46,9 @@ class ListGithubApi : GithubApi {
     }
 
     companion object {
-
-        const val PAGE_SIZE = 100
+        private const val PAGE_SIZE = 100
+        private const val BASE_API_URL = "https://api.github.com/repos/"
         private val PULL_REQUEST_URL_PATTERN =
             Regex("https://github[.]com/(?<organization>.+)/(?<repository>.+)/pull/(?<pullRequestNumber>[0-9]+)")
-        private const val BASE_API_URL = "https://api.github.com/repos/"
     }
 }

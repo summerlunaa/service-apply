@@ -10,7 +10,6 @@ import support.test.IntegrationTest
 class ListGithubApiTest(
     private val githubApi: GithubApi
 ) : StringSpec({
-
     "github의 'List commits on a pull request' API를 요청한다".config(enabled = false) {
         val commits = githubApi.requestCommits(
             createAssignment(pullRequestUrl = PULL_REQUEST_URL)

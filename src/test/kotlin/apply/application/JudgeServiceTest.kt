@@ -41,7 +41,7 @@ class JudgeServiceTest : BehaviorSpec({
 
         When("예제 테스트 케이스를 실행하면") {
             Then("예제 테스트가 실행되지 않는다.") {
-                shouldThrow<IllegalStateException> { judgeService.runExampleTestCase(1L, 1L) }
+                shouldThrow<IllegalStateException> { judgeService.runExampleTest(1L, 1L) }
             }
         }
     }
@@ -56,7 +56,7 @@ class JudgeServiceTest : BehaviorSpec({
 
         When("예제 테스트 케이스를 실행하면") {
             Then("예제 테스트가 실행되지 않는다.") {
-                shouldThrow<IllegalArgumentException> { judgeService.runExampleTestCase(1L, 1L) }
+                shouldThrow<IllegalArgumentException> { judgeService.runExampleTest(1L, 1L) }
             }
         }
     }
@@ -71,7 +71,7 @@ class JudgeServiceTest : BehaviorSpec({
             val existHistory = createJudgeHistory(commitHash = COMMIT_HASH)
             every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns existHistory
             Then("기존의 최신 테스트 실행 결과를 반환한다.") {
-                val executionResponse = judgeService.runExampleTestCase(1L, 1L)
+                val executionResponse = judgeService.runExampleTest(1L, 1L)
                 executionResponse shouldBe JudgeHistoryResponse(existHistory, assignment)
             }
         }
@@ -80,7 +80,7 @@ class JudgeServiceTest : BehaviorSpec({
             val existHistory = createJudgeHistory(commitHash = "old-commit")
             every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns existHistory
             Then("테스트를 실행한 뒤 새로운 테스트 실행 결과를 반환한다.") {
-                val executionResponse = judgeService.runExampleTestCase(1L, 1L)
+                val executionResponse = judgeService.runExampleTest(1L, 1L)
                 executionResponse shouldNotBe JudgeHistoryResponse(existHistory, assignment)
             }
         }

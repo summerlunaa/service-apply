@@ -6,7 +6,6 @@ import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 
 class CommitsTest : StringSpec({
-
     "가장 최신 commit을 가져온다" {
         val commits = Commits(
             listOf(

@@ -18,7 +18,7 @@ internal class JudgeControllerTest : RestControllerTest() {
     @Test
     fun `예제 테스트를 실행한다`() {
         val response = createJudgeHistoryResponse()
-        every { judgeService.runExampleTestCase(any(), any()) } returns response
+        every { judgeService.runExampleTest(any(), any()) } returns response
 
         mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgement", 1L, 1L) {
             bearer("valid_token")

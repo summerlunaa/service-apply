@@ -21,7 +21,7 @@ class JudgeRestController(
         @PathVariable missionId: Long,
         @LoginUser user: User,
     ): ResponseEntity<ApiResponse<JudgeHistoryResponse>> {
-        val response = judgeService.runExampleTestCase(missionId, user.id)
+        val response = judgeService.runExampleTest(missionId, user.id)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 }

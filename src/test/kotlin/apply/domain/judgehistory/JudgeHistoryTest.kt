@@ -8,7 +8,6 @@ import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 
 class JudgeHistoryTest : StringSpec({
-
     "커밋 해쉬가 다르면 자동 채점이 가능하다" {
         val judgeHistory = createJudgeHistory()
         val commit = createCommit("different-commit-hash")
