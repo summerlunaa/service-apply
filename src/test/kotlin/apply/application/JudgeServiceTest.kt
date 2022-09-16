@@ -39,7 +39,7 @@ class JudgeServiceTest : BehaviorSpec({
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns null
 
-        When("예제 테스트 케이스를 실행하면") {
+        When("예제 테스트를 실행하면") {
             Then("예제 테스트가 실행되지 않는다.") {
                 shouldThrow<IllegalStateException> { judgeService.runExampleTest(1L, 1L) }
             }
@@ -54,7 +54,7 @@ class JudgeServiceTest : BehaviorSpec({
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns null
 
-        When("예제 테스트 케이스를 실행하면") {
+        When("예제 테스트를 실행하면") {
             Then("예제 테스트가 실행되지 않는다.") {
                 shouldThrow<IllegalArgumentException> { judgeService.runExampleTest(1L, 1L) }
             }
@@ -67,7 +67,7 @@ class JudgeServiceTest : BehaviorSpec({
         every { githubApi.requestCommits(any()) } returns listOf(createCommitResponse())
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
 
-        When("제출한 commit id와 최신 이력의 commit id가 같은 예제 테스트 케이스를 실행하면") {
+        When("제출한 commit id와 최신 이력의 commit id가 같은 예제 테스트를 실행하면") {
             val existHistory = createJudgeHistory(commitHash = COMMIT_HASH)
             every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns existHistory
             Then("기존의 최신 테스트 실행 결과를 반환한다.") {
@@ -76,7 +76,7 @@ class JudgeServiceTest : BehaviorSpec({
             }
         }
 
-        When("제출한 commit id와 최신 이력의 commit id가 다른 예제 테스트 케이스를 실행하면") {
+        When("제출한 commit id와 최신 이력의 commit id가 다른 예제 테스트를 실행하면") {
             val existHistory = createJudgeHistory(commitHash = "old-commit")
             every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns existHistory
             Then("테스트를 실행한 뒤 새로운 테스트 실행 결과를 반환한다.") {
