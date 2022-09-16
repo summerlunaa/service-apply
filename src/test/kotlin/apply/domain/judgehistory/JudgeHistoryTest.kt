@@ -10,7 +10,7 @@ import io.kotest.matchers.booleans.shouldBeTrue
 class JudgeHistoryTest : StringSpec({
     "커밋 해쉬가 다르면 자동 채점이 가능하다" {
         val judgeHistory = createJudgeHistory()
-        val commit = createCommit("different-commit-hash")
+        val commit = createCommit(commitHash = "different-commit-hash")
 
         val isCompleted = judgeHistory.isCompleted(commit)
 
@@ -24,18 +24,28 @@ class JudgeHistoryTest : StringSpec({
             )
         )
         val commit = createCommit()
+        val isCompleted = judgeHistory.isCompleted(commit)
 
-        val isEqual = judgeHistory.isCompleted(commit)
-
-        isEqual.shouldBeFalse()
+        isCompleted.shouldBeFalse()
     }
 
-    "커밋 해쉬가 같고, 이전 자동 채점 결과가 정상이었다면 자동 채점이 불가능하다" {
+    "커밋 해쉬가 같고, 예제 테스트인 경우 이전 자동 채점 결과가 정상이었다면 자동 채점이 불가능하다" {
         val judgeHistory = createJudgeHistory()
         val commit = createCommit()
 
-        val isEqual = judgeHistory.isCompleted(commit)
+        val isCompleted = judgeHistory.isCompleted(commit)
 
-        isEqual.shouldBeTrue()
+        isCompleted.shouldBeTrue()
+    }
+
+    "본 테스트인 경우에는 항상 자동채점이 가능하다" {
+        val judgeHistory = createJudgeHistory(
+            judgeType = JudgeType.REAL
+        )
+        val commit = createCommit()
+
+        val isCompleted = judgeHistory.isCompleted(commit)
+
+        isCompleted.shouldBeFalse()
     }
 })
