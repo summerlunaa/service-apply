@@ -1,0 +1,5 @@
+= 자동채점 관련 API
+
+== 예비 테스트 실행
+
+operation::judgment-post[snippets='http-request,http-response']

@@ -1,4 +1,4 @@
-package apply.domain.judgehistory
+package apply.domain.judgment
 
 import javax.persistence.Column
 import javax.persistence.Embeddable
@@ -6,7 +6,7 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
 @Embeddable
-class JudgeResult(
+class JudgmentResult(
     @Column
     val passCount: Int,
 
@@ -15,7 +15,7 @@ class JudgeResult(
 
     @Column
     @Enumerated(EnumType.STRING)
-    val statusCode: JudgeStatusCode
+    val statusCode: JudgmentStatusCode
 ) {
     val isOK: Boolean
         get() = !statusCode.isError()

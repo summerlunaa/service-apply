@@ -1,4 +1,4 @@
-package apply.domain.judgehistory
+package apply.domain.judgment
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

@@ -1,9 +1,9 @@
 package apply.application
 
 import apply.domain.assignment.Assignment
-import apply.domain.judgehistory.JudgeHistory
+import apply.domain.judgment.JudgmentHistory
 
-data class JudgeHistoryResponse(
+data class JudgmentHistoryResponse(
     val testStatus: TestStatus,
     val pullRequestUrl: String,
     val commitUrl: String,
@@ -11,13 +11,13 @@ data class JudgeHistoryResponse(
     val totalCount: Int?,
     val message: String?
 ) {
-    constructor(judgeHistory: JudgeHistory, assignment: Assignment) : this(
+    constructor(judgmentHistory: JudgmentHistory, assignment: Assignment) : this(
         TestStatus.PENDING,
         assignment.pullRequestUrl,
-        toCommitUrl(assignment.pullRequestUrl, judgeHistory.commitHash),
-        judgeHistory.result?.passCount,
-        judgeHistory.result?.totalCount,
-        judgeHistory.result?.statusCode?.message
+        toCommitUrl(assignment.pullRequestUrl, judgmentHistory.commitHash),
+        judgmentHistory.result?.passCount,
+        judgmentHistory.result?.totalCount,
+        judgmentHistory.result?.statusCode?.message
     )
 
     companion object {

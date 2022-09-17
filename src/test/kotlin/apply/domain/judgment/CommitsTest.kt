@@ -1,4 +1,4 @@
-package apply.domain.judgehistory
+package apply.domain.judgment
 
 import apply.createCommit
 import io.kotest.core.spec.style.StringSpec

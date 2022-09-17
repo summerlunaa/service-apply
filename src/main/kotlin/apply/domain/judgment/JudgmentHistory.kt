@@ -1,4 +1,4 @@
-package apply.domain.judgehistory
+package apply.domain.judgment
 
 import support.domain.BaseEntity
 import javax.persistence.Column
@@ -8,7 +8,7 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
 @Entity
-class JudgeHistory(
+class JudgmentHistory(
     @Column(nullable = false)
     val userId: Long,
 
@@ -23,11 +23,11 @@ class JudgeHistory(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val judgeType: JudgeType,
+    val judgmentType: JudgmentType,
 
     @Column
     @Embedded
-    val result: JudgeResult? = null,
+    val result: JudgmentResult? = null,
 
     id: Long = 0L
 ) : BaseEntity(id) {
@@ -38,5 +38,5 @@ class JudgeHistory(
 
     private fun isResultOK(): Boolean = result?.isOK ?: false
 
-    private fun isExampleType() = judgeType == JudgeType.EXAMPLE
+    private fun isExampleType() = judgmentType == JudgmentType.EXAMPLE
 }
