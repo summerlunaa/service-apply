@@ -30,7 +30,7 @@ class JudgeServiceTest : BehaviorSpec({
         missionRepository, assignmentRepository, judgeHistoryRepository, githubApi
     )
 
-    Given("과제 제출 시간이 아닐 때") {
+    Given("과제 제출 시간이 아닌 경우") {
         every { missionRepository.getById(any()) } returns createMission(
             startDateTime = LocalDateTime.now().minusMinutes(2),
             endDateTime = LocalDateTime.now().minusMinutes(1)
@@ -39,14 +39,16 @@ class JudgeServiceTest : BehaviorSpec({
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns null
 
-        When("예제 테스트를 실행하면") {
-            Then("예제 테스트가 실행되지 않는다.") {
-                shouldThrow<IllegalStateException> { judgeService.runExampleTest(1L, 1L) }
+        When("해당 과제 제출물의 예제 테스트를 실행하면") {
+            Then("예외가 발생한다.") {
+                shouldThrow<IllegalStateException> {
+                    judgeService.runExampleTest(1L, 1L)
+                }
             }
         }
     }
 
-    Given("과제 제출 마감 시간 이전의 가장 최신 커밋이 존재하지 않을 때") {
+    Given("과제 제출 마감 시간 이전의 가장 최신 커밋이 존재하지 않는 경우") {
         every { missionRepository.getById(any()) } returns createMission()
         every { githubApi.requestCommits(any()) } returns listOf(
             createCommitResponse(date = LocalDateTime.now().plusDays(8))
@@ -54,14 +56,16 @@ class JudgeServiceTest : BehaviorSpec({
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns null
 
-        When("예제 테스트를 실행하면") {
-            Then("예제 테스트가 실행되지 않는다.") {
-                shouldThrow<IllegalArgumentException> { judgeService.runExampleTest(1L, 1L) }
+        When("해당 과제 제출물의 예제 테스트를 실행하면") {
+            Then("예외가 발생한다.") {
+                shouldThrow<IllegalArgumentException> {
+                    judgeService.runExampleTest(1L, 1L)
+                }
             }
         }
     }
 
-    Given("테스트 실행 이력이 존재할 때") {
+    Given("테스트 실행 이력이 존재하는 경우") {
         val assignment = createAssignment()
         every { missionRepository.getById(any()) } returns createMission()
         every { githubApi.requestCommits(any()) } returns listOf(createCommitResponse())
@@ -70,6 +74,7 @@ class JudgeServiceTest : BehaviorSpec({
         When("제출한 commit id와 최신 이력의 commit id가 같은 예제 테스트를 실행하면") {
             val existHistory = createJudgeHistory(commitHash = COMMIT_HASH)
             every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns existHistory
+
             Then("기존의 최신 테스트 실행 결과를 반환한다.") {
                 val executionResponse = judgeService.runExampleTest(1L, 1L)
                 executionResponse shouldBe JudgeHistoryResponse(existHistory, assignment)
@@ -79,6 +84,7 @@ class JudgeServiceTest : BehaviorSpec({
         When("제출한 commit id와 최신 이력의 commit id가 다른 예제 테스트를 실행하면") {
             val existHistory = createJudgeHistory(commitHash = "old-commit")
             every { judgeHistoryRepository.findLastByUserIdAndMissionId(any(), any()) } returns existHistory
+
             Then("테스트를 실행한 뒤 새로운 테스트 실행 결과를 반환한다.") {
                 val executionResponse = judgeService.runExampleTest(1L, 1L)
                 executionResponse shouldNotBe JudgeHistoryResponse(existHistory, assignment)
