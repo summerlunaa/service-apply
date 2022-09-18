@@ -12,7 +12,7 @@ private const val REQUEST_KEY_SIZE = 36
 internal class AwsJudgmentServerTest(
     judgmentServer: JudgmentServer
 ) : StringSpec({
-    "요청한다".config(enabled = false) {
+    "채점 서버에 채점을 요청하고 Request Key를 받는다".config(enabled = false) {
         val requestKey = judgmentServer.requestJudgement(createJudgmentRequest())
 
         requestKey shouldHaveLength REQUEST_KEY_SIZE
