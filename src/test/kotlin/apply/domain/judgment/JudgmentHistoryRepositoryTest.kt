@@ -13,15 +13,25 @@ class JudgmentHistoryRepositoryTest(
 ) : ExpectSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
-    context("실행 이력") {
-        expect("user id와 mission id 중 가장 마지막을 찾는다.") {
-            judgmentHistoryRepository.save(createJudgmentHistory(id = 1L))
-            judgmentHistoryRepository.save(createJudgmentHistory(id = 2L))
-            judgmentHistoryRepository.save(createJudgmentHistory(id = 3L))
-
-            val lastHistory = judgmentHistoryRepository.findLastByUserIdAndMissionId(1L, 1L)
+    context("쟈동채점 실행 이력") {
+        judgmentHistoryRepository.save(createJudgmentHistory(id = 1L))
+        judgmentHistoryRepository.save(createJudgmentHistory(id = 2L))
+        judgmentHistoryRepository.save(createJudgmentHistory(id = 3L))
+        expect("userId와 missionId로 마지막 예제 테스트 실행 이력을 찾는다") {
+            val lastHistory =
+                judgmentHistoryRepository.findLastByUserIdAndMissionIdAndJudgmentType(1L, 1L, JudgmentType.EXAMPLE)
 
             lastHistory!!.id shouldBe 3L
+        }
+
+        expect("userId와 missionId로 마지막 본 테스트 실행 이력을 찾는다") {
+            judgmentHistoryRepository.save(createJudgmentHistory(id = 4L, judgmentType = JudgmentType.REAL))
+            judgmentHistoryRepository.save(createJudgmentHistory(id = 5L, judgmentType = JudgmentType.EXAMPLE))
+
+            val lastHistory =
+                judgmentHistoryRepository.findLastByUserIdAndMissionIdAndJudgmentType(1L, 1L, JudgmentType.REAL)
+
+            lastHistory!!.id shouldBe 4L
         }
     }
 })
