@@ -1,6 +1,5 @@
 package apply.application
 
-import apply.domain.assignment.Assignment
 import apply.domain.judgment.JudgmentHistory
 
 data class JudgmentHistoryResponse(
@@ -11,10 +10,10 @@ data class JudgmentHistoryResponse(
     val totalCount: Int?,
     val message: String?
 ) {
-    constructor(judgmentHistory: JudgmentHistory, assignment: Assignment) : this(
+    constructor(judgmentHistory: JudgmentHistory, pullRequestUrl: String) : this(
         TestStatus.PENDING,
-        assignment.pullRequestUrl,
-        toCommitUrl(assignment.pullRequestUrl, judgmentHistory.commitHash),
+        pullRequestUrl,
+        toCommitUrl(pullRequestUrl, judgmentHistory.commitHash),
         judgmentHistory.result?.passCount,
         judgmentHistory.result?.totalCount,
         judgmentHistory.result?.statusCode?.message

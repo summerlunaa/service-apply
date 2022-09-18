@@ -1,6 +1,5 @@
 package apply.application.github
 
-import apply.domain.assignment.Assignment
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
@@ -38,13 +37,13 @@ class GithubApi {
         .baseUrl(BASE_API_URL)
         .build()
 
-    fun requestCommits(assignment: Assignment): List<CommitResponse> {
-        val groups = PULL_REQUEST_URL_PATTERN.findOrThrow(assignment.pullRequestUrl)
+    fun requestCommits(pullRequestUrl: String): List<CommitResponse> {
+        val groups = PULL_REQUEST_URL_PATTERN.findOrThrow(pullRequestUrl)
 
         return client.get()
             .uri("${groups["organization"]}/${groups["repository"]}/pulls/${groups["pullRequestNumber"]}/commits?per_page=$PAGE_SIZE")
             .retrieve()
-            .handleOnError(assignment.pullRequestUrl)
+            .handleOnError(pullRequestUrl)
             .bodyToFlux<CommitResponse>()
             .toIterable()
             .toList()
