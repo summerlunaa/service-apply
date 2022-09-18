@@ -21,4 +21,6 @@ class JudgmentItem(
     var programmingLanguage: ProgrammingLanguage?,
 
     id: Long = 0L
-) : BaseEntity(id)
+) : BaseEntity(id) {
+    fun isValid(): Boolean = evaluationItemId != null && testName != null && programmingLanguage != null
+}
