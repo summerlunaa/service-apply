@@ -7,6 +7,7 @@ import apply.createAssignment
 import apply.createCommit
 import apply.createJudgmentHistory
 import apply.createJudgmentItem
+import apply.domain.judgment.JudgmentFailCauseRepository
 import apply.domain.judgment.JudgmentHistoryRepository
 import apply.domain.judgment.JudgmentItemRepository
 import apply.domain.judgment.JudgmentType
@@ -22,11 +23,13 @@ import io.mockk.mockk
 class JudgmentHistoryServiceTest : BehaviorSpec({
     val judgmentHistoryRepository = mockk<JudgmentHistoryRepository>()
     val judgmentItemRepository = mockk<JudgmentItemRepository>()
+    val judgmentFailCauseRepository = mockk<JudgmentFailCauseRepository>()
     val judgmentServer = mockk<JudgmentServer>()
 
     val judgmentHistoryService = JudgmentHistoryService(
         judgmentHistoryRepository,
         judgmentItemRepository,
+        judgmentFailCauseRepository,
         judgmentServer
     )
 
