@@ -52,16 +52,16 @@ fun createJudgmentHistoryResponse(
 
 fun createCommit(
     commitHash: String = COMMIT_HASH,
-    date: LocalDateTime = LocalDateTime.now()
+    pullRequestUrl: String
 ): Commit {
-    return Commit(commitHash, date)
+    return Commit(commitHash, pullRequestUrl)
 }
 
 fun createCommitResponse(
     hash: String = COMMIT_HASH,
     date: LocalDateTime = LocalDateTime.now()
 ): CommitResponse {
-    return CommitResponse(hash, date.toString())
+    return CommitResponse(hash, date)
 }
 
 fun createJudgmentRequest(

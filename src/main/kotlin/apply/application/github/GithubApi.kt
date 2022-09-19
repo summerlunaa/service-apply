@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToFlux
+import support.toAsiaSeoul
+import support.toUniversal
+import java.time.LocalDateTime
 
 private fun Regex.findOrThrow(pullRequestUrl: String): MatchNamedGroupCollectionWrapper {
     return MatchNamedGroupCollectionWrapper(
@@ -37,8 +40,9 @@ class GithubApi {
         .baseUrl(BASE_API_URL)
         .build()
 
-    fun requestCommits(pullRequestUrl: String): List<CommitResponse> {
+    fun requestLatestCommit(pullRequestUrl: String, thresholdDateTime: LocalDateTime): CommitResponse {
         val groups = PULL_REQUEST_URL_PATTERN.findOrThrow(pullRequestUrl)
+        val universalDateTime = thresholdDateTime.toUniversal()
 
         return client.get()
             .uri("${groups["organization"]}/${groups["repository"]}/pulls/${groups["pullRequestNumber"]}/commits?per_page=$PAGE_SIZE")
@@ -46,7 +50,10 @@ class GithubApi {
             .handleOnError(pullRequestUrl)
             .bodyToFlux<CommitResponse>()
             .toIterable()
-            .toList()
+            .filter { it.date.isBefore(universalDateTime) }
+            .maxByOrNull { it.date }
+            ?.apply { date.toAsiaSeoul() }
+            ?: throw IllegalArgumentException("과제 제출 마감 시간 이전에 제출된 커밋이 없습니다.")
     }
 
     companion object {

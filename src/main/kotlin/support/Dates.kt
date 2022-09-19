@@ -2,6 +2,7 @@ package support
 
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 fun createLocalDateTime(
     year: Int,
@@ -22,3 +23,9 @@ fun createLocalDate(
 ): LocalDate {
     return LocalDate.of(year, month, dayOfMonth)
 }
+
+fun String.parseBy(formatter: DateTimeFormatter): LocalDateTime = LocalDateTime.parse(this, formatter)
+
+fun LocalDateTime.toAsiaSeoul(): LocalDateTime = plusHours(9)
+
+fun LocalDateTime.toUniversal(): LocalDateTime = minusHours(9)

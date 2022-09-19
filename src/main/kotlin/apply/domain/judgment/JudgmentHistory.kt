@@ -31,10 +31,10 @@ class JudgmentHistory(
 
     id: Long = 0L
 ) : BaseEntity(id) {
-    fun isCompleted(commit: Commit): Boolean =
-        isCommitHashEqual(commit) && isResultOK() && isExampleType()
+    fun isCompleted(commitHash: String): Boolean =
+        isCommitHashEqual(commitHash) && isResultOK() && isExampleType()
 
-    private fun isCommitHashEqual(commit: Commit) = this.commitHash == commit.hash
+    private fun isCommitHashEqual(commitHash: String) = this.commitHash == commitHash
 
     private fun isResultOK(): Boolean = result?.isOK ?: false
 

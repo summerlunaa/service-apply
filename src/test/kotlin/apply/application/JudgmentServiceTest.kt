@@ -54,7 +54,6 @@ class JudgmentServiceTest : BehaviorSpec({
             judgmentHistoryRepository.findLastByUserIdAndMissionIdAndJudgmentType(any(), any(), any())
         } returns null
 
-
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
@@ -64,11 +63,10 @@ class JudgmentServiceTest : BehaviorSpec({
         }
 
         When("해당 과제 제출물의 본 테스트를 실행하면") {
-            every { githubApi.requestCommits(any()) } returns listOf(
+            every { githubApi.requestLatestCommit(any(), any()) } returns
                 createCommitResponse(
                     date = LocalDateTime.now().minusMinutes(3)
                 )
-            )
             every { judgementServer.requestJudgement(any()) } returns REQUEST_KEY
             every { judgmentItemRepository.getByMissionId(any()) } returns createJudgmentItem()
             val createHistory = createJudgmentHistory(judgmentType = JudgmentType.REAL)
@@ -83,40 +81,9 @@ class JudgmentServiceTest : BehaviorSpec({
         }
     }
 
-    Given("과제 제출 마감 시간 이전의 가장 최신 커밋이 존재하지 않는 경우") {
-        every { missionRepository.getById(any()) } returns createMission()
-        every { githubApi.requestCommits(any()) } returns listOf(
-            createCommitResponse(date = LocalDateTime.now().plusDays(8))
-        )
-        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
-        every {
-            judgmentHistoryRepository.findLastByUserIdAndMissionIdAndJudgmentType(
-                any(),
-                any(),
-                any()
-            )
-        } returns null
-
-        When("해당 과제 제출물의 예제 테스트를 실행하면") {
-            Then("예외가 발생한다") {
-                shouldThrow<IllegalArgumentException> {
-                    judgmentService.judgeExample(1L, 1L)
-                }
-            }
-        }
-
-        When("해당 과제 제출물의 본 테스트를 실행하면") {
-            Then("예외가 발생한다") {
-                shouldThrow<IllegalArgumentException> {
-                    judgmentService.judgeReal(1L, 1L)
-                }
-            }
-        }
-    }
-
     Given("테스트 실행 이력이 존재하는 경우") {
         every { missionRepository.getById(any()) } returns createMission()
-        every { githubApi.requestCommits(any()) } returns listOf(createCommitResponse())
+        every { githubApi.requestLatestCommit(any(), any()) } returns createCommitResponse()
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
 
         When("제출한 commit id와 최신 이력의 commit id가 같은 예제 테스트를 실행하면") {

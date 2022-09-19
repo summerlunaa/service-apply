@@ -1,6 +1,5 @@
 package apply.domain.judgment
 
-import apply.createCommit
 import apply.createJudgmentHistory
 import apply.createJudgmentHistoryResult
 import io.kotest.core.spec.style.StringSpec
@@ -10,9 +9,8 @@ import io.kotest.matchers.booleans.shouldBeTrue
 class JudgmentHistoryTest : StringSpec({
     "커밋 해쉬가 다르면 자동 채점이 가능하다" {
         val judgmentHistory = createJudgmentHistory()
-        val commit = createCommit(commitHash = "different-commit-hash")
 
-        val isCompleted = judgmentHistory.isCompleted(commit)
+        val isCompleted = judgmentHistory.isCompleted("different-commit-hash")
 
         isCompleted.shouldBeFalse()
     }
@@ -23,18 +21,16 @@ class JudgmentHistoryTest : StringSpec({
                 statusCode = JudgmentStatusCode.INTERNAL_SERVER_ERROR
             )
         )
-        val commit = createCommit()
 
-        val isCompleted = judgmentHistory.isCompleted(commit)
+        val isCompleted = judgmentHistory.isCompleted(judgmentHistory.commitHash)
 
         isCompleted.shouldBeFalse()
     }
 
     "커밋 해쉬가 같고, 예제 테스트인 경우 이전 자동 채점 결과가 정상이었다면 자동 채점이 불가능하다" {
         val judgmentHistory = createJudgmentHistory()
-        val commit = createCommit()
 
-        val isCompleted = judgmentHistory.isCompleted(commit)
+        val isCompleted = judgmentHistory.isCompleted(judgmentHistory.commitHash)
 
         isCompleted.shouldBeTrue()
     }
@@ -43,9 +39,8 @@ class JudgmentHistoryTest : StringSpec({
         val judgmentHistory = createJudgmentHistory(
             judgmentType = JudgmentType.REAL
         )
-        val commit = createCommit()
 
-        val isCompleted = judgmentHistory.isCompleted(commit)
+        val isCompleted = judgmentHistory.isCompleted(judgmentHistory.commitHash)
 
         isCompleted.shouldBeFalse()
     }
