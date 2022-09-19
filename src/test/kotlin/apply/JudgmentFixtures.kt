@@ -52,7 +52,7 @@ fun createJudgmentHistoryResponse(
 
 fun createCommit(
     commitHash: String = COMMIT_HASH,
-    pullRequestUrl: String
+    pullRequestUrl: String = PULL_REQUEST_URL
 ): Commit {
     return Commit(commitHash, pullRequestUrl)
 }
